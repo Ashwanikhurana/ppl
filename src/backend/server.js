@@ -1,4 +1,3 @@
-// importing the needed modules and files 
 var express = require("express");
 var app = express();
 var router  = require("./router");
@@ -13,7 +12,6 @@ app.use(express.static('uploads'));
 app.use(cors());
 
 
-// making momgodb connection
 mongoose.connect('mongodb://localhost:27017/practice', { useNewUrlParser: true } , 
     (error) => {
         if(error){
@@ -23,13 +21,11 @@ mongoose.connect('mongodb://localhost:27017/practice', { useNewUrlParser: true }
         }
     });
   
-// using the router    
 app.use("/",router);
 
 
 
 
-// starting the server
 app.listen(3030 ,() => {
     console.log("we are live at port 3030");
 })

@@ -10,16 +10,16 @@ class ForgotComponent extends React.Component{
         }
     }
 
-    changeData = (e) => {
-        this.setState({input : e.target.value})
-    }
-
     sendingFromAxios = (e) => {
         e.preventDefault();
         console.log("a form was submitted" + this.state.input)
         axios.post('http://localhost:3030/enteremail', {input : this.state.input}).then((res) => {
             this.setState({responsive : res.data});
         })
+    }
+
+    changeData = (e) => {
+      this.setState({input : e.target.value})
     }
 
 
