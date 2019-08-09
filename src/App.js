@@ -11,14 +11,14 @@ import { Route} from "react-router-dom";
 function App() {
   return (
     <div className="App">
-      {/* <switch> */}
+       <switch>
         <Route exact path="/" component={TimeLineComponent} />
         <Route path="/login" component={LogInComponent} />
         <Route path="/signup" component={SignUpComponent} />
         <Route path="/forgot" component={ForgotComponent} />
         <Route path="/reset/:email" component={ResetComponent} />
         <Route path= '/singlepost/:id' component={SinglePostComponent} />
-      {/* </switch> */}
+       </switch>
     </div>
   );
 }
