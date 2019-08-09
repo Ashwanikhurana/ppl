@@ -6,19 +6,15 @@ import {Link} from 'react-router-dom';
 class  SignUpComponent extends React.Component{
   sendingFromAxios = (e) => {
     e.preventDefault();   
-    this.newMethod();
     axios.post("http://localhost:3030/signup" , {username : this.props.username , firstname : this.props.firstname  , lastname : this.props.lastname , email : this.props.email , password : this.props.password}).then((res) => {
-        this.letsdo(res)
+        this.letsdo(res);
     })
 }
 
   letsdo = (a) => {
       this.props.getResponse(a.data);
   }
-
-  newMethod() {
-      console.log("form is submitted", {username : this.props.username ,  firstname: this.props.firstname, lastname: this.props.lastname, email: this.props.email, password: this.props.password });
-  }
+  
     render () {
       return (
         <div>
