@@ -13,7 +13,6 @@ class LogInComponent extends React.Component{
   }
     sendingFromAxios = (e) => {
         e.preventDefault();   
-        this.newMethod();
         const rememberme = this.state.rememberme;
         localStorage.setItem('rememberme' , rememberme);
         const pass = this.props.password;
@@ -25,47 +24,34 @@ class LogInComponent extends React.Component{
             const username = res.data.slice(28);
             localStorage.setItem('username' , username);
             const tocheck = res.data.slice(0 , 27);
-            console.log(tocheck);
             if(tocheck === "thanks for logging in again"){
               this.props.history.push("/");
             }
         })
-    }
+      }
 
-    changingdata = (e) => {
-      this.setState({rememberme : e.target.checked});
-    }
+      changingdata = (e) => {
+        this.setState({rememberme : e.target.checked});
+      }
     
       letsdo = (a) => {
           this.props.getResponse(a.data);
       }
     
-      newMethod() {
-          console.log("form is submitted", { email: this.props.email, password: this.props.password });
-      }
-
+      
       componentDidMount() {
         const rememberme = localStorage.getItem('rememberme') === 'true';
         const user = rememberme ? localStorage.getItem('user') : '';
-        // const pass = rememberme ? localStorage.getItem('pass') : '';
         const username = rememberme ? localStorage.getItem('username') : '';
         this.setState({ rememberme : rememberme });
         this.setState({usernametodisplay : username});
         this.props.updateEmail(user);
-        // this.props.updatePassword(pass);
-      }
-
-      manazestorage = () => {
-        localStorage.setItem('user' , '');
-        localStorage.setItem('username' , '');
       }
      
     render() {
-      // console.log("is data", this.state.rememberme);
       console.log(this.props);
       return (
         <div>
-         <Link to= "/signup"> <button onClick = {this.manazestorage}>logout</button> </Link>
           <meta charSet="utf-8" />
           <title>Login Account</title>
           <div className="navbar navbar-inverse navbar-fixed-top">
