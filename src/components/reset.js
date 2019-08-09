@@ -12,15 +12,6 @@ class ResetComponent extends  React.Component{
         }
     }
 
-    componentDidMount() {
-      console.log(this.props.match.params);
-
-    }
-
-    changeData = (e) => {
-        this.setState({[e.target.name] : e.target.value});
-    }
-
     sendingFromAxios = (e) => {
         e.preventDefault();
         if(this.state.newpassword === this.state.confirmnewpassword){
@@ -28,14 +19,15 @@ class ResetComponent extends  React.Component{
             console.log(res.data);
         })
       }else{
-          alert("pagal h k");
+          alert("password does not match");
       }
+    }
+    
+    changeData = (e) => {
+        this.setState({[e.target.name] : e.target.value});
     }
 
     render () {
-        console.log(this.state.newpassword);
-        console.log(this.state.confirmnewpassword);
-        console.log(this.props.match);
       return (
         <div>
           <meta charSet="utf-8" />
@@ -105,7 +97,6 @@ class ResetComponent extends  React.Component{
                     <li><span>Enter New Password</span><input type="text" placeholder="Enter your new password" name="newpassword" onChange={this.changeData} required/></li>
                     <li><span>Confirm Password</span><input type="text" placeholder="Enter your password again" name="confirmnewpassword" onChange={this.changeData} required/></li>
                     <Link to = "/login"> <li><input type="submit" defaultValue="Submit" /></li></Link>
-                    {/* <h6>{this.state.response}</h6> */}
                   </ul>
                   </form>
                 </div>
