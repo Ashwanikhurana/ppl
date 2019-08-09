@@ -32,6 +32,15 @@ class LogInComponent extends React.Component{
         })
     }
 
+    componentDidMount() {
+      const rememberme = localStorage.getItem('rememberme') === 'true';
+      const user = rememberme ? localStorage.getItem('user') : '';
+      const username = rememberme ? localStorage.getItem('username') : '';
+      this.setState({ rememberme : rememberme });
+      this.setState({usernametodisplay : username});
+      this.props.updateEmail(user);
+    }
+
     changingdata = (e) => {
       this.setState({rememberme : e.target.checked});
     }
@@ -44,28 +53,10 @@ class LogInComponent extends React.Component{
           console.log("form is submitted", { email: this.props.email, password: this.props.password });
       }
 
-      componentDidMount() {
-        const rememberme = localStorage.getItem('rememberme') === 'true';
-        const user = rememberme ? localStorage.getItem('user') : '';
-        // const pass = rememberme ? localStorage.getItem('pass') : '';
-        const username = rememberme ? localStorage.getItem('username') : '';
-        this.setState({ rememberme : rememberme });
-        this.setState({usernametodisplay : username});
-        this.props.updateEmail(user);
-        // this.props.updatePassword(pass);
-      }
-
-      manazestorage = () => {
-        localStorage.setItem('user' , '');
-        localStorage.setItem('username' , '');
-      }
-     
+          
     render() {
-      // console.log("is data", this.state.rememberme);
-      console.log(this.props);
       return (
         <div>
-         <Link to= "/signup"> <button onClick = {this.manazestorage}>logout</button> </Link>
           <meta charSet="utf-8" />
           <title>Login Account</title>
           <div className="navbar navbar-inverse navbar-fixed-top">
