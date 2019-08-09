@@ -6,20 +6,21 @@ class ForgotComponent extends React.Component{
         super();
         this.state = {
             input : "",
-            responsive : "",
+            response : "",
         }
-    }
-
-    changeData = (e) => {
-        this.setState({input : e.target.value})
     }
 
     sendingFromAxios = (e) => {
         e.preventDefault();
         console.log("a form was submitted" + this.state.input)
         axios.post('http://localhost:3030/enteremail', {input : this.state.input}).then((res) => {
-            this.setState({responsive : res.data});
+            this.setState({response : res.data});
         })
+    }
+    
+    
+    changeData = (e) => {
+        this.setState({input : e.target.value})
     }
 
 
@@ -92,7 +93,7 @@ class ForgotComponent extends React.Component{
                   <ul>
                     <li><span>Enter E-mail ID</span><input type="email" placeholder="User@gmail.com" name = "input" onChange = {this.changeData} required/></li>
                     <li><input type="submit" defaultValue="Submit" /></li>
-                    <h6>{this.state.responsive}</h6>
+                    <h6>{this.state.response}</h6>
                   </ul>
                   </form>
                 </div>
