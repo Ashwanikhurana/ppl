@@ -29,7 +29,7 @@ module.exports = {
                               });
                               
                               var mailOptions = {
-                                from: 'ashwanikhurana627@gmail.com',
+                                from: '',
                                 to: data.email,
                                 subject: 'PLEASE VERIFY YOUR ACCOUNT',
                                 html: '<a href = "http://localhost:3000/login">click here to verify </a>' + "your otp is " + otp
