@@ -29,19 +29,6 @@ class SinglePostComponent extends React.Component{
     }
   }
 
-  setdata = (data) => {
-      this.setState({response : data});
-      this.setpost();
-  }
-
-  setpost = () => {
-    this.setState({description : this.state.response[0].Description});
-    this.setState({category : this.state.response[0].category});
-    this.setState({filename : this.state.response[0].image.filename});
-    this.setState({displaytime : this.state.response[0].time.slice(4 , 15)});
-    this.setState({displaydate : this.state.response[0].time.slice(16 , 24)});
-  }
-  
   componentDidMount() {
     console.log("form is submitted" + this.props.match.params.id)
     Axios.post('http://localhost:3030/getsinglepostdata' , { "id" : this.props.match.params.id}).then((res) => {
@@ -62,6 +49,15 @@ class SinglePostComponent extends React.Component{
       this.setState({commentresponse : res.data});
       this.showcomments();
     })
+  }
+  
+  
+  setpost = () => {
+    this.setState({description : this.state.response[0].Description});
+    this.setState({category : this.state.response[0].category});
+    this.setState({filename : this.state.response[0].image.filename});
+    this.setState({displaytime : this.state.response[0].time.slice(4 , 15)});
+    this.setState({displaydate : this.state.response[0].time.slice(16 , 24)});
   }
 
   getlikes = () => {
@@ -102,10 +98,6 @@ class SinglePostComponent extends React.Component{
    }
   }
 
-  handlesinglecomment = (e) => {
-    this.setState({singlecomment : e.target.value})
-  }
-
   handlecomments = (e) => {
     e.preventDefault();
     console.log("form is submitted" ,{user : this.state.currentuser , comment : this.state.singlecomment , id : this.props.match.params.id})
@@ -126,6 +118,16 @@ class SinglePostComponent extends React.Component{
     }
     this.setState({displaycommentarray : a});
     this.setState({displayusers : b});
+  }
+  
+  setdata = (data) => {
+      this.setState({response : data});
+      this.setpost();
+  }
+  
+  
+  handlesinglecomment = (e) => {
+    this.setState({singlecomment : e.target.value})
   }
     render() {
       return (
@@ -263,7 +265,6 @@ class SinglePostComponent extends React.Component{
                       <div className="list_info">
                        {this.state.displaycommentarray[s]}
                       </div>
-                      {/* <input type="button" defaultValue="Reply" className="orng_btn" /> */}
                     </li>
                   )}
                     <li>
