@@ -46,6 +46,8 @@ class TimeLineComponent extends React.Component{
           const user = localStorage.getItem('username');
           this.setState({liveuser : user});
         }
+    
+    
         letsCheck = () => {
             if(this.state.booleanForDrop === true){
                 this.setState({myDiv : ""})
@@ -70,10 +72,6 @@ class TimeLineComponent extends React.Component{
           })
         }
 
-
-        letChangeData = (e) => {
-          this.setState({[e.target.name] : e.target.value})
-        }
 
         onDrop = (acceptedFiles) => {
           console.log("on drop f")
@@ -109,14 +107,8 @@ class TimeLineComponent extends React.Component{
           }
         }
 
-
-        getResponseFromMongo = (value) => {
-          this.setState({resarray : value})
-        }
  
         showPosts = (myvar = this.state.resarray) => {
-          console.log("my var is",myvar);
-          console.log("length of myvar is" + myvar.length)
           let i;
           var a = [] , b = [] , c = [] , d = [] ,f = [] , g = [] , h = [];
           for(i=0;i<myvar.length;i++){
@@ -127,8 +119,6 @@ class TimeLineComponent extends React.Component{
              g[i] = myvar[i].time.slice(16 , 24);
              h[i] = myvar[i]._id;
           }
-         
-          console.log("a is", a);
           this.setState({filenamearray : a.reverse()});
           this.setState({Descriptionarray : b.reverse()});
           this.setState({categoryarray : c.reverse()});
@@ -153,9 +143,16 @@ class TimeLineComponent extends React.Component{
           console.log(newarray);
           this.showPosts(newarray);
         }
+        
+        letChangeData = (e) => {
+          this.setState({[e.target.name] : e.target.value})
+        }
+
+        getResponseFromMongo = (value) => {
+          this.setState({resarray : value})
+        }
 
     render() {
-      console.log(this.state.categoryvalue);
       return (
         <div>
           <meta charSet="utf-8" />
