@@ -30,7 +30,6 @@ class SinglePostComponent extends React.Component{
   }
 
   componentDidMount() {
-    console.log("form is submitted" + this.props.match.params.id)
     Axios.post('http://localhost:3030/getsinglepostdata' , { "id" : this.props.match.params.id}).then((res) => {
       this.setdata(res.data);
       console.log(this.state.response);
@@ -70,19 +69,15 @@ class SinglePostComponent extends React.Component{
     }
     if(temp ==0){
     this.setState({likecount : this.state.likecount + 1});
-    console.log("likecount is" , this.state.likecount);
     var temp = this.state.likearray;
     temp.push(this.state.currentuser);
     this.setState({likearray : temp});
-    console.log("likearray is" , this.state.likearray);
-    console.log("form submitted" , {likecount : this.state.likecount , likearray : this.state.likearray , id : this.props.match.params.id});
     Axios.post('http://localhost:3030/savelikes' , {likecount : this.state.likecount+1 , likearray : this.state.likearray , id : this.props.match.params.id}).then((res) => {
       console.log(res.data);
     })
    }
    else{
      this.setState({likecount : this.state.likecount - 1});
-     console.log("likecount is" , this.state.likecount);
      var temp1 = this.state.likearray;
      for(let i=0;i<this.state.likearray.length;i++){
        if(this.state.likearray[i] == this.state.currentuser){
@@ -90,8 +85,6 @@ class SinglePostComponent extends React.Component{
        }
      }
      this.setState({likearray : temp1});
-     console.log("likearray is" , this.state.likearray);
-     console.log("form submitted" , {likecount : this.state.likecount , likearray : this.state.likearray , id : this.props.match.params.id});
      Axios.post('http://localhost:3030/savelikes' , {likecount : this.state.likecount-1 , likearray : this.state.likearray , id : this.props.match.params.id}).then((res) => {
        console.log(res.data);
      })
@@ -100,17 +93,14 @@ class SinglePostComponent extends React.Component{
 
   handlecomments = (e) => {
     e.preventDefault();
-    console.log("form is submitted" ,{user : this.state.currentuser , comment : this.state.singlecomment , id : this.props.match.params.id})
     Axios.post('http://localhost:3030/savecomments' , {user : this.state.usernametodisplay , comment : this.state.singlecomment , id : this.props.match.params.id}).then((res) => {
-      console.log("response is" , res.data);  
-    this.setState({commentresponse : res.data});
-    this.showcomments();
+      this.setState({commentresponse : res.data});
+      this.showcomments();
     })
   }
 
   showcomments = () => {
     let temp = this.state.commentresponse[0].commentarray;
-    console.log(temp);
      var a = [] , b = [] , i;
     for(i=0;i<temp.length;i++){
       a[i] = temp[i].comment;
