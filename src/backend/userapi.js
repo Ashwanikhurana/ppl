@@ -1,93 +1,61 @@
-var userssaved = require("./schema");
+var userDB = require("./schema");
 var nodemailer = require("nodemailer");
-var api = require('./imageschema');
-var categoryapi = require('./categoryschema');
+var postDB = require('./imageschema');
+var categoryDB = require('./categoryschema');
+var jwt = require('jsonwebtoken');
 
 
 module.exports = {
-    savingdata : (data,cb)=>{
+    savingData: (data, cb) => {
         let email = data.email;
-        userssaved.find({email}, (err , result) => {
-            if(err){
+        userDB.find({ email }, (err, result) => {
+            if (err) {
                 console.log(err)
             }
-            else{
-                if(result.length == 0){
-                    userssaved.create(data,(err,result)=>{
-                        if(err){
-                        console.log(err);
-                        return cb(err,null)
+            else {
+                if (result.length == 0) {
+                    userDB.create(data, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            return cb(err, null)
                         }
-                        else{
-                            var otp = Math.floor(100000 + Math.random() * 900000);
-                            var transporter = nodemailer.createTransport({
-                                service: 'gmail',
-                                auth: {
-                                  user: 'ashwanikhurana627@gmail.com',
-                                  pass: 'ashwanikhurana@2001'
-                                }
-                              });
-                              
-                              var mailOptions = {
-                                from: 'ashwanikhurana627@gmail.com',
-                                to: data.email,
-                                subject: 'PLEASE VERIFY YOUR ACCOUNT',
-                                html: '<a href = "http://localhost:3000/login">click here to verify </a>' + "your otp is " + otp
-                              };
-                              
-                              transporter.sendMail(mailOptions, function(error, info){
-                                if (error) {
-                                  console.log(error);
-                                } else {
-                                  console.log('Email sent: ' + info.response);
-                                }
-                              });
-                              userssaved.update({email : data.email} , {$set : {myotp : otp}}, (err , result) => {
-                                  if(err){
-                                      console.log(err);
-                                      return cb(err , null);
-                                  }else{
-                                      console.log("otp sent");
-                                  }
-                              })
-                            return cb(null,"thanks for registering please verify the mail");
+                        else {
+                            return cb(null, "thanks for registering please login");
                         }
                     })
-                }else{
-                    return cb(null , "sorry that e-mail is already registered with us");
+                } else {
+                    return cb(null, "sorry that e-mail is already registered with us");
                 }
             }
         })
     },
-    checklogin : (data , cb) => {
+    checkLogin: (data, cb) => {
         let email = data.email;
         let password = data.password;
-        let isverified = data.isverified;
-        userssaved.find({email} , (err , result) => {
-            if(err){
+        userDB.find({ email }, (err, result) => {
+            if (err) {
                 console.log("error occured" + err);
-                return cb(err , null);
-            }else if(result.length == 0){
-                return cb(null , "your entered email is notregistered with us");
-            }else if(result.length >= 1){
-                userssaved.find({$and : [{email} , {password}]} , (err , result) => {
-                    if(err){
+                return cb(err, null);
+            } else if (result.length == 0) {
+                return cb(null, "your entered email is not registered with us");
+            } else if (result.length >= 1) {
+                userDB.find({ $and: [{ email }, { password }] }, (err, result) => {
+                    if (err) {
                         console.log(err);
-                        return cb(err , null);
-                    }else if(result.length == 0){
-                        console.log("password is incorrect");
-                        return cb(null , "password is incorrect please check the password");
-                    }else{
-                        userssaved.find({$and : [{email} , {password} , {isverified : true}]} , (err  , result) => {
-                            if(err ){
+                        return cb(err, null);
+                    } else if (result.length == 0) {
+                        return cb(null, "password is incorrect please check the password");
+                    } else {
+                        const user = {
+                            email: data.email,
+                            password: data.password,
+                        }
+
+                        jwt.sign({ user }, 'mySecretKeyForJWT', (err, token) => {
+                            if (err) {
                                 console.log(err);
-                            }else if(result.length == 0){
-                                console.log("not verified");
-                                return cb(null , "your entered email is not verified yet" + result.username);
-                            }else{
-                                console.log("log in sucessfully" );
-                                console.log(result);
-                                return cb(null , "thanks for logging in again " + result[0].username);
+                            } else {
+                                return cb(null, "thanks for logging in again" + token);
                             }
                         })
                     }
@@ -95,202 +63,269 @@ module.exports = {
             }
         })
     },
-    verifymail : (data , cb) => {
-        let email = data.email;
-        let motp = data.otp;
-        userssaved.update({} , {$set : {isverified : true}} , (err , result) => {
-            if(err){
-                console.log("an error occurred"+ err);
-                return cb(err , null);
-            }else if(result.length == 0){
-                return cb(null , "otp is not correct");
-            }else{
-                return cb(null , "thanks for verifying the email");
-            }
-        })
-    },
-    uploadingImage : (data , cb) => {
-        api.create(data , (err , result) => {
-            if(err){
+    uploadingImage: (data, cb) => {
+        postDB.create(data, (err, result) => {
+            if (err) {
                 console.log("error in uploading image data in userapi" + err);
-                return cb(err , null);
-            }else{
-                api.find({} , (err , result) => {
-                    if(err){
+                return cb(err, null);
+            } else {
+                postDB.find({_id : result._id}).sort({ time: -1 }).limit(10).populate('postedBy').exec((err, result) => {
+                    if (err) {
                         console.log(err);
-                    }else{
-                        return  cb(null , result);
+                    } else {
+                        return cb(null, result);
                     }
                 })
             }
         })
     },
-    addingCategory : (data , cb) => {
+    addingCategory: (data, cb) => {
         let category = data.category;
         let image = data.image;
-        categoryapi.find({category} , (err , result) => {
-            if(err){
+        categoryDB.find({ category }, (err, result) => {
+            if (err) {
                 console.log(err);
-            }else if(result.length == 0){
-                categoryapi.create({category : data.category , image : data.image} , (err , result) => {
-                    if(err){
+            } else if (result.length == 0) {
+                categoryDB.create({ category: data.category, image: data.image }, (err, result) => {
+                    if (err) {
                         console.log(err);
-                        return cb(err , null);
-                    }else{
-                        categoryapi.find({} , (err , result) => {
-                            if(err){
+                        return cb(err, null);
+                    } else {
+                        categoryDB.find({}, (err, result) => {
+                            if (err) {
                                 console.log(err);
-                                return cb(err , null);
-                            }else{
-                                return cb(null , result);
+                                return cb(err, null);
+                            } else {
+                                return cb(null, result);
                             }
                         })
                     }
                 })
-            }else{
-                return cb(null , result);
-            }
-        })
-    } ,
-    reterivecategory : (data , cb) => {
-        categoryapi.find({} , (err , result) => {
-            if(err){
-                console.log(err);
-            }else{
-                return cb(null , result);
+            } else {
+                return cb(null, result);
             }
         })
     },
-    reterivepost : (data , cb) => {
-        api.find({} , (err , result) => {
-            if(err){
+    reteriveCategory: (data, cb) => {
+        categoryDB.find({}, (err, result) => {
+            if (err) {
                 console.log(err);
-            }else{
-                return cb(null , result);
+            } else {
+                return cb(null, result);
             }
         })
     },
-   sendresetmail : (data , cb) => {
-       
-       userssaved.find({email : data.input} , (err , result) => {
-            if(err){
+    reterivePost: (data, cb) => {
+
+        postDB.find({}).sort({ time: -1 }).skip(data.skippedPost).limit(10).populate('postedBy').exec((err, result) => {
+            if (err) {
                 console.log(err);
-                return cb(err , null);
-            }else if(result.length >= 1){
-                console.log(result);
-                var transporternew = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                      user: 'ashwanikhurana627@gmail.com',
-                      pass: 'ashwanikhurana@2001'
-                    }
-                  });
-                  var mailOptionsnew = {
-                    from: 'ashwanikhurana627@gmail.com',
-                    to: data.input,
-                    subject: 'PLEASE RESET YOUR PASSWORD',
-                    html: `<a href = http://localhost:3000/reset/${data.input}` + '>click here to reset your password </a>'
-                  };
-                  
-                  transporternew.sendMail(mailOptionsnew, function(error, info){
-                    if (error) {
-                      console.log(error);
+            } else {
+                // console.log(result[0].postedBy.username)
+                return cb(null, result);
+            }
+        })
+    },
+    sendResetMail: (data, cb) => {
+        userDB.find({ email: data.email }, (err, result) => {
+            if (err) {
+                console.log(err);
+                return cb(err, null);
+            } else if (result.length >= 1) {
+                jwt.sign({ data }, 'mySecretKeyForResetPassword', (err, token) => {
+                    if (err) {
+                        console.log(err);
                     } else {
-                      console.log('Email sent: ' + info.response);
+                                console.log(result);
+                                data.token = token;
+                                var transporternew = nodemailer.createTransport({
+                                    service: 'gmail',
+                                    auth: {
+                                        user: 'ashwanikhurana627@gmail.com',
+                                        pass: 'ashwanikhurana@2001'
+                                    }
+                                });
+                                var mailOptionsnew = {
+                                    from: 'ashwanikhurana627@gmail.com',
+                                    to: data.email,
+                                    subject: 'PLEASE RESET YOUR PASSWORD',
+                                    html: `<a href = http://localhost:3000/reset/${data.token}` + '>click here to reset your password </a>'
+                                };
+
+                                transporternew.sendMail(mailOptionsnew, function (error, info) {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        console.log('Email sent: ' + info.response);
+                                    }
+                        })
                     }
-                  });
-                return cb(null , "password reset link was send to your email");
-            }else{
-               return cb(null , "email not found")
-            }
-       })
-   },
-   updatepassword : (data , cb) => {
-    userssaved.update({email : data.email} , {$set : {password : data.newpassword}} , (err , result) => {
-        if(err){
-            console.log(err);
-            return cb(err , null);
-        }else{
-            console.log(result);
-            return cb(null , result);
-        }
-    })
-   },
-   reterivesinglepostdata : (data , cb) => {
-       let id = data.id;
-        api.find({_id : id} , (err , result) => {
-            if(err){
-                console.log(err);
-                return cb(err , null);
-            }else{
-                return cb(null , result)
+                })
+                return cb(null, "password reset link was send to your email");
+            } else {
+                return cb(null, "email not found")
             }
         })
-   },
-   reterivecategorypost : (data , cb) => {
-       api.find({category : data.category} , (err , result) => {
-           if(err){
-               console.log(err);
-               return cb(err , null);
-           }else{
-               return cb(null , result)
-           }
-       })
-   },
-   updatelikes : (data , cb) => {
-       api.update({"_id" : data.id} , {$set: {likecount : data.likecount , likearray : data.likearray}}, (err , result) =>{
-        if(err){
-            console.log(err);
-            return cb(err , null);
-        }else {
-            api.find({"_id" : data.id} , (err , result) => {
-                if(err){
-                    console.log(err);
-                    return cb(err , null);
-                }else{
-                    return cb(null , result);
-                }
-            })
-        }
-       })
-   },
-   reterivelikes : (data , cb) => {
-       api.find({"_id" : data.id} , (err , result) => {
-        if(err){
-            console.log(err);
-            return cb(err ,null);
-        }else{
-            return cb(null , result);
-        }
-       })
-   },
-   updatecomments : (data , cb) => {
-       console.log("data reached to me " , data);
-    api.update({_id : data.id} , {$push : {commentarray : [{commentedby : data.user , comment : data.comment}]}} , (err , result) => {
-        if(err){
-            console.log(err);
-            return cb(err , null);
-        }else{
-            api.find({_id : data.id} , (err , result) => {
-                if(err){
-                    console.log(err);
-                    return cb(err , null)
-                }else{
-                    return cb(null , result);
-                }
-            })
-        }
-    })
-   },
-   reterivecomments : (data , cb) => {
-        api.find({_id : data.id} , (err , result) => {
-            if(err){
+    },
+    updatePassword: (data, cb) => {
+        console.log(data);
+        jwt.verify(data.email, 'mySecretKeyForResetPassword', (err, result) => {
+            if (err) {
                 console.log(err);
-                return cb(err , null);
-            }else{
-                console.log(result);
-                return cb(null , result);
+            } else {
+                userDB.updateOne({ email: result.data.email }, { $set: { password: data.newPassword } }, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return cb(err, null);
+                    } else {
+                        console.log(result);
+                        return cb(null, "password changed succesully");
+                    }
+                })
             }
         })
-   }
+
+    },
+    reteriveSinglePostData: (data, cb) => {
+        let id = data.id;
+
+        postDB.find({ _id: id }).populate('postedBy').populate('commentarray.commentedby').exec((err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                // console.log(" i am the king" , result[0].postedBy);
+                return cb(null, result);
+            }
+        })
+    },
+    reteriveCategoryPost: (data, cb) => {
+        postDB.find({ category: data.category }, (err, result) => {
+            if (err) {
+                console.log(err);
+                return cb(err, null);
+            } else {
+                return cb(null, result)
+            }
+        })
+    },
+    updateLikeTrue: (data, cb) => {
+        postDB.updateOne({ "_id": data.post }, { $addToSet: { likearray: data.user } }, (err, result) => {
+            if (err) {
+                console.log(err);
+                return cb(err, null);
+            } else {
+                postDB.find({ "_id": data.post }, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return cb(err, null);
+                    } else {
+                        return cb(null, result);
+                    }
+                })
+            }
+        })
+    },
+    updateLikeFalse: (data, cb) => {
+        postDB.updateOne({ "_id": data.post }, { $pull: { likearray: data.user } }, (err, result) => {
+            if (err) {
+                console.log(err);
+                return cb(err, null);
+            } else {
+                postDB.find({ "_id": data.post }, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return cb(err, null);
+                    } else {
+                        return cb(null, result);
+                    }
+                })
+            }
+        })
+    },
+    updateComments: (data, cb) => {
+
+        postDB.updateOne({ _id: data.id }, { $push: { commentarray: [{ commentedby: data.user, comment: data.comment }] } }).exec((err, result) => {
+            if (err) {
+                console.log(err);
+                return cb(err, null);
+            } else {
+                postDB.find({ _id: data.id }).populate('commentarray.commentedby').exec((err, result) => {
+                    if (err) {
+                        console.log(err);
+                        return cb(err, null)
+                    } else {
+                        return cb(null, result[0].commentarray);
+                    }
+                })
+            }
+        })
+    },
+    verifyToken: (data, cb) => {
+        //    console.log("data for token is" , data.token);
+        jwt.verify(data.token, 'mySecretKeyForJWT', (err, result) => {
+            if (err) {
+                console.log(err);
+                return cb(err, null);
+            } else {
+                // console.log("decoded token is" , result);            
+                userDB.find({ email: result.user.email }, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        // console.log("data fond is" , result);
+                        return cb(null, result);
+                    }
+                })
+            }
+        })
+    },
+    checkToken: (req, res, next) => {
+
+        let token = req.body.token;
+        // console.log("token from chektken is" , token);
+
+        if (token != null) {
+            jwt.verify(token, 'mySecretKeyForJWT', (err, decoded) => {
+                if (err) {
+                    res.send("invalid token");
+                } else {
+                    req.decoded = decoded;
+                    //   console.log(decoded);
+                    next();
+                }
+            });
+        } else {
+            res.send("invalid token");
+        }
+    },
+    updateFlagTrue: (data, cb) => {
+        userDB.update({ _id: data.user }, { $addToSet: { flag: data.post } }).populate('flag').exec((err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                return cb(null, result);
+            }
+        })
+    },
+    updateFlagFalse: (data, cb) => {
+        userDB.update({ _id: data.user }, { $pull: { flag: data.post } }).populate('flag').exec((err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                return cb(null, result);
+            }
+        })
+    },
+
+    getFlaggedPost: (data, cb) => {
+        console.log("data at userapi is", data);
+        userDB.find({ _id: data.user }).populate('flag').exec((err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("result at userapi is", result);
+                return cb(null, result);
+            }
+        })
+    }
 } 

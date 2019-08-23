@@ -24,10 +24,29 @@ mongoose.connect('mongodb://localhost:27017/practice', { useNewUrlParser: true }
 app.use("/",router);
 
 
-
-
 app.listen(3030 ,() => {
     console.log("we are live at port 3030");
 })
 
+// var express = require('express');
+// // var cookieParser = require('cookie-parser');
+// var session = require('express-session');
+
+// var app = express();
+
+// // app.use(cookieParser());
+// app.use(session({secret: "Shh, its a secret!" }));
+
+// app.get('/', function(req, res){
+//    if(req.session.email){
+//       req.session.email++;
+//       session.secret = "kjhkqj";
+//       console.log(session.secret);
+//       res.send("You visited this page " + req.session.email + " times");
+//    } else {
+//       req.session.email = 1;
+//       res.send("Welcome to this page for the first time!");
+//    }
+// });
+// app.listen(3030);
 

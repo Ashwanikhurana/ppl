@@ -2,14 +2,41 @@ var mongooose = require("mongoose");
 var schema = mongooose.Schema;
 
 var mydata = new schema({
-    username : String,
-    firstname : String,
-    lastname : String,
-    email : String,
-    password : String,
-    myotp : Number,
-    isverified : Boolean,
+    username : {
+        type : String,
+        required : true,
+    },
+    firstname : {
+        type : String,
+        required : true,
+    },
+    lastname : {
+        type : String,
+        required : true,
+    },
+    email : {
+        type : String,
+        required : true,
+    },
+    password : {
+        type : String,
+        required : true,
+    },
+    isverified : {
+        type : Number,
+    },
+    resetPasswordToken : {
+        type : String,
+    },
+    flag : [{
+        type : schema.Types.ObjectId,
+        ref : 'posts',
+    }]
 });
 
-module.exports = mongooose.model("users" ,mydata);
+
+
+user = mongooose.model("users" ,mydata);
+
+module.exports = user;
 

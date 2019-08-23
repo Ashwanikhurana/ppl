@@ -2,10 +2,16 @@ var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 
 var categorySchema = new schema({
-    category : "",
-    image  : Object,
+    category : {
+        type : String,
+        required : true,
+    },
+    image  : {
+        type : {},
+        required : true,
+    },
 })
 
-var letsaddCategories = mongoose.model("usercategories" , categorySchema);
+var letsaddCategories = mongoose.model("category" , categorySchema);
 
 module.exports =  letsaddCategories;
