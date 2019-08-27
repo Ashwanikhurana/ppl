@@ -13,6 +13,7 @@ function App() {
     <div className="App">
       {/* <switch> */}
         <Route exact path="/" component={SignUpComponent} />
+        <Route exact path="/" component={TimeLineComponent} />
         <Route path="/login" component={LogInComponent} />
         <Route path="/posts" component={TimeLineComponent} />
         <Route path="/forgot" component={ForgotComponent} />
