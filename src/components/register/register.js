@@ -8,19 +8,12 @@ import Container from './container';
 
 class SignUpComponent extends React.Component {
 
-  componentDidMount() {
-    const checkToken = localStorage.getItem('token');
-    if (checkToken) {
-      alert("please logout first to login")
-      this.props.history.push('/posts');
-    }
-  }
 
-  
   handleSignUp = (e) => {
     e.preventDefault();
     axios.post("http://localhost:3030/signup", { username: this.props.username, firstname: this.props.firstname, lastname: this.props.lastname, email: this.props.email, password: this.props.password }).then((res) => {
-      if (res.data === "thanks for registering please login") {
+      if (res.data === "thanks for registering") {
+        alert(res.data);
         this.props.history.push('/login');
       }
       this.props.getResponse(res.data);

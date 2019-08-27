@@ -6,12 +6,12 @@ var categorySchema = new schema({
         type : String,
         required : true,
     },
-    image  : {
+    image : {
         type : {},
         required : true,
     },
 })
 
-var letsaddCategories = mongoose.model("category" , categorySchema);
+var categoryDB = mongoose.model('categories' , categorySchema);
 
-module.exports =  letsaddCategories;
+module.exports = categoryDB;

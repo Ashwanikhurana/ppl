@@ -12,8 +12,7 @@ var imageSchema = new schema({
     },
     time : {
         type : Date,
-        default : new Date(),
-        // required : true,
+        default :  Date.now,
     },
     image : {
         type : {},
@@ -38,7 +37,7 @@ var imageSchema = new schema({
     postedBy : {
         type : schema.Types.ObjectId,
         ref : 'users',
-        // required : true,
+        required : true,
     },
 })
 

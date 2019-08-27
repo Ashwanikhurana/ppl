@@ -2,21 +2,17 @@ import React from 'react';
 import Dropzone from 'react-dropzone';
 import {connect} from 'react-redux';
 
-class GetUploadPostDataComponent extends React.Component {
+class UploadCategoryComponent extends React.Component {
     render() {
+        console.log(this.props.categoryImage);
+        console.log(this.props.categoryAdd);
         return (
             <div>
-                <form onSubmit = {this.props.handlePost}>
-                    SELECT CATEGORY:
-                <select name="category" onChange = {e => this.props.changeCategory(e.target.value)} required>
-                        <option hidden value = {this.props.category}></option>
-                        {this.props.categories.map((category) =>
-                            <option>{category.category}</option>
-                        )}
-                    </select><br />
-                    DESCRIPTION:<br />
-                    <input type="text" name="Description" onChange={e => this.props.changeDescription(e.target.value)} required />
-                    <Dropzone name="image" onDrop={(acceptedFiles) => this.props.changeImage(acceptedFiles[0])}>
+                <form onSubmit = {this.props.handleCategory}>
+                    <h4>Type your category</h4>
+                    <input type="text" name="category" onChange={e => this.props.changeAddCategory(e.target.value)} required />
+                    <h4>Add Image</h4>
+                    <Dropzone name="image" onDrop={(acceptedFiles) => this.props.changeCategoryImage(acceptedFiles[0])}>
                         {({ getRootProps, getInputProps }) => (
                             <section className="container">
                                 <div {...getRootProps({ className: 'dropzone' })}>
@@ -39,7 +35,8 @@ var mapStateToProps = (state) => {
         category : state.timeLineReducer.category,
         image : state.timeLineReducer.image,
         posts : state.timeLineReducer.posts,
-        categories : state.timeLineReducer.categories,
+        categoryAdd : state.timeLineReducer.categoryAdd,
+        categoryImage : state.timeLineReducer.categoryImage,
     }
 }
 
@@ -49,7 +46,9 @@ var mapDispatchToProps = (dispatch) => {
         changeCategory : data => {dispatch({type : "CHANGE_CATEGORY" , payload : data})},
         changeImage : data => {dispatch({type : "CHANGE_IMAGE" , payload : data})},
         changePosts : data => {dispatch({type : "CHANGE_POST" , payload : data})},
+        changeAddCategory : data => {dispatch({type : "ADD_CATEGORY" , payload : data})},
+        changeCategoryImage : data => {dispatch({type : "CHANGE_CATEGORY_IMAGE" , payload : data})},
     }
 }
 
-export default connect(mapStateToProps , mapDispatchToProps)(GetUploadPostDataComponent);
+export default connect(mapStateToProps , mapDispatchToProps)(UploadCategoryComponent);

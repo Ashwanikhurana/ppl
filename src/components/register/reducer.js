@@ -8,7 +8,7 @@ var initialState = {
 }
 
  var signUpReducer = (state = initialState, action) => {
-    if (action.type === 'CHANGE_FIRSTNAME_SIGUP') {
+    if (action.type === 'CHANGE_FIRSTNAME_SIGNUP') {
         state = { ...state, firstname: action.payload }
     } else if (action.type === 'CHANGE_LASTNAME_SIGNUP') {
         state = { ...state, lastname: action.payload }

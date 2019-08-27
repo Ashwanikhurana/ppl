@@ -23,12 +23,12 @@ class ProfileComponent extends React.Component {
                                         {/* <div className="profile_text"><a href="#">Change Profile Pic</a></div> */}
                                     </div>
                                     <div className="profile_info">
-                                        <div className="edit_div"><a href="#">Edit <img src="images/timeline_img.png" /></a></div>
+                                        <div className="edit_div"><button onClick = {this.props.handleLogOut}>Log Out </button></div>
                                         <div className="profile_form">
                                             <ul>
                                                 <li>
                                                     <div className="div_name1">Name :</div>
-                                                    <div className="div_name2">kuch bhi</div>
+                                                    <div className="div_name2">{this.props.user.username}</div>
                                                 </li>
                                                 {/* <li>
                                                     <div className="div_name1">Sex :</div>
@@ -56,7 +56,7 @@ class ProfileComponent extends React.Component {
                         </ul>
                     </div>
                 </div>
-                <PostComponent/>
+                <PostComponent handlePagination = {this.props.handlePagination}/>
             </div>
         )
     }
@@ -67,7 +67,8 @@ var mapStateToProps = (state) => {
         description : state.timeLineReducer.description,
         category : state.timeLineReducer.category,
         image : state.timeLineReducer.image,
-        posts : state.timeLineReducer.posts
+        posts : state.timeLineReducer.posts,
+        user: state.timeLineReducer.user,
     }
 }
 

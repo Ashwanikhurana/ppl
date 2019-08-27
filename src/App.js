@@ -17,7 +17,7 @@ function App() {
         <Route path="/posts" component={TimeLineComponent} />
         <Route path="/forgot" component={ForgotComponent} />
         <Route path="/reset/:email" component={ResetComponent} />
-        <Route path= '/singlepost' component={SinglePostComponent} />
+        <Route path= '/post/singlepost:id' component={SinglePostComponent} />
       {/* </switch> */}
     </div>
   );

@@ -23,10 +23,10 @@ class PostUploadComponent extends React.Component {
                     <div className="content_rgt">
                         <button className="rght_btn" onClick = {this.handleUploadButon}><span className="rght_btn_icon"><img src="images/btn_iconb.png" alt="up" /></span> <span className="btn_sep"><img src="images/btn_sep.png" alt="sep" /></span > <a>Upload Post</a> </button>
                         <div>{this.props.uploadComponent}</div>
-                        <AddCategoryComponent />
+                        <AddCategoryComponent handleCategory = {this.props.handleCategory}/>
                         <Categories />
                     </div>
-                    <ProfileComponent />
+                    <ProfileComponent handlePagination = {this.props.handlePagination} handleLogOut = {this.props.handleLogOut}/>
                 </div>
             </div>
         )
