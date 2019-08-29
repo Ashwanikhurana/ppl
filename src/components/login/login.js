@@ -35,10 +35,7 @@ class LogInComponent extends React.Component {
     return (
       <div>
         <meta charSet="utf-8" />
-        <NavBar />
-        <Header />
         <Container handleLogIn={this.handleLogIn} />
-        <Footer />
       </div>
     );
   }

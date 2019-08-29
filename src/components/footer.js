@@ -10,10 +10,10 @@ class Footer extends React.Component {
                 </div>
                 <div className="footr_rgt">
                     <ul>
-                        <li><a href="#"><img src="images/social_1.png" /></a></li>
-                        <li><a href="#"><img src="images/social_2.png" /></a></li>
-                        <li><a href="#"><img src="images/social_3.png" /></a></li>
-                        <li><a href="#"><img src="images/social_4.png" /></a></li>
+                        <li><a href="#"><img src="/images/social_1.png" /></a></li>
+                        <li><a href="#"><img src="/images/social_2.png" /></a></li>
+                        <li><a href="#"><img src="/images/social_3.png" /></a></li>
+                        <li><a href="#"><img src="/images/social_4.png" /></a></li>
                     </ul>
                 </div>
             </div>

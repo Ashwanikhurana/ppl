@@ -11,7 +11,6 @@ class ResetComponent extends React.Component {
   handleReset = (e) => {
     e.preventDefault();
     if (this.props.newPassword === this.props.confirmPassword) {
-      // console.log("form is submitted", { newpassword: this.props.newPassword, email: this.props.match.params.email });
       axios.post('http://localhost:3030/reset', { newPassword: this.props.newPassword, email: this.props.match.params.email }).then((res) => {
         if (res.status === 200) {
           this.props.history.push('/login');
@@ -27,10 +26,7 @@ class ResetComponent extends React.Component {
   render() {
     return (
       <div>
-        <NavBar />
-        <Header />
         <Container handleReset={this.handleReset} />
-        <Footer />
       </div>
     );
   }

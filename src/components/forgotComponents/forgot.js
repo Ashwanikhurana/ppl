@@ -21,10 +21,7 @@ class ForgotComponent extends React.Component {
       <div>
         <meta charSet="utf-8" />
         <title>Forgot Password</title>
-        <NavBar />
-        <Header />
         <Container handleForgot = {this.handleForgot}/>        
-        <Footer />
       </div>
     );
   }

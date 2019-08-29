@@ -23,19 +23,15 @@ mongoose.connect('mongodb://localhost:27017/practice', { useNewUrlParser: true }
         }
     });
   
-<<<<<<< HEAD
+
 app.use("/",userRouter);
 app.use("/post" , postRouter);
 app.use("/category" , categoryRouter);
 
 
-=======
-app.use("/",router);
 
 
 
-
->>>>>>> 678092675b6f0482d35a06835a527a57409b3b06
 app.listen(3030 ,() => {
     console.log("we are live at port 3030");
 })
