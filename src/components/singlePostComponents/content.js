@@ -43,13 +43,13 @@ class SinglePostComponent extends React.Component {
     let temp1 =
       this.props.post.postedBy != undefined &&
       this.props.post.postedBy.flag.includes(this.props.match.params.id);
-      console.log(temp);
+    console.log(temp);
 
-      if(temp1 === true){
-        this.props.changeFlag("flagged");
-      }else if(temp1 === false) {
-        this.props.changeFlag("flag");
-      }
+    if (temp1 === true) {
+      this.props.changeFlag("flagged");
+    } else if (temp1 === false) {
+      this.props.changeFlag("flag");
+    }
   };
 
   updatePost = e => {
@@ -100,12 +100,40 @@ class SinglePostComponent extends React.Component {
       });
   };
 
+  updateFlag = e => {
+    e.preventDefault();
+    if (this.props.flagStatus === "flag") {
+      axios
+        .post("http://localhost:3030/updateflag", {
+          id: this.props.loggedUser._id,
+          update: { $addToSet: { flag : this.props.post._id } }
+        })
+        .then(res => {
+          console.log(res.data);
+          this.props.changeLoggedUser(res.data[0]);
+          this.props.changeFlag("flagged");
+        });
+    } else if (this.props.flagStatus === "flagged") {
+      axios
+        .post("http://localhost:3030/updateflag", {
+          id: this.props.loggedUser._id,
+          update: { $pull: {flag: this.props.post._id } }
+        })
+        .then(res => {
+          console.log(res.data);
+          this.props.changeLoggedUser(res.data[0]);
+          this.props.changeFlag("flag");
+        });
+    }
+  };
+
   render() {
     return (
       <>
         <SinglePost
           updatePost={this.updatePost}
           handleComments={this.updateComments}
+          updateFlag = {this.updateFlag}
         />
       </>
     );

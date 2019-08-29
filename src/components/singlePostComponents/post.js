@@ -44,7 +44,7 @@ class SinglePost extends React.Component {
                   <div className="btm_list">
                     <ul>
                       <li>
-                        <a href="javascript:void(0)" onClick = {this.props.changeFlag}>
+                        <a href="javascript:void(0)" onClick = {this.props.updateFlag}>
                           <span className="btn_icon">
                             <img src="/images/icon_002.png" alt="share" />
                           </span>
