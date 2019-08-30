@@ -137,14 +137,21 @@ module.exports = {
         return cb(err, null);
       } else {
         // console.log("decoded token is" , result);
-        userDB.find({ email: result.user.email }, (err, result) => {
-          if (err) {
+        // userDB.find({ email: result.user.email }, (err, result) => {
+        //   if (err) {
+        //     console.log(err);
+        //   } else {
+        //     // console.log("data fond is" , result);
+        //     return cb(null, result);
+        //   }
+        // });
+        userDB.find({email : result.user.email}).populate('flag').exec((err , result) => {
+          if(err){
             console.log(err);
-          } else {
-            // console.log("data fond is" , result);
-            return cb(null, result);
+          }else{
+            return cb(null , result);
           }
-        });
+        })
       }
     });
   },

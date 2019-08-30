@@ -12,6 +12,7 @@ var initialState = {
     categoryImage: null,
     categories: [],
     page : 1,
+    flag : false,
 }
 
 var timeLineReducer = (state = initialState, action) => {
@@ -43,7 +44,9 @@ var timeLineReducer = (state = initialState, action) => {
         state = {...state , page : action.payload}
     } else if(action.type === 'CHANGE_POST_COUNT') {
         state = {...state , postCount : action.payload}
-    } 
+    } else if(action.type === 'CHANGE_FLAG') {
+        state = {...state , flag : action.payload}
+    }
     return state;
 }
 

@@ -1,14 +1,12 @@
 import React from "react";
 import LinkedComponent from "./leftSide";
 import { connect } from "react-redux";
-import { testfunc } from "./thnkMiddleware."
 
 class SinglePost extends React.Component {
   render() {
     this.props.changeImageName(
       this.props.post.image && this.props.post.image.filename
     );
-    console.log(this.props.post.commentarray);
     return (
       <div className="container">
         <div className="content">
@@ -44,7 +42,10 @@ class SinglePost extends React.Component {
                   <div className="btm_list">
                     <ul>
                       <li>
-                        <a href="javascript:void(0)" onClick = {this.props.updateFlag}>
+                        <a
+                          href="javascript:void(0)"
+                          onClick={this.props.updateFlag}
+                        >
                           <span className="btn_icon">
                             <img src="/images/icon_002.png" alt="share" />
                           </span>
@@ -123,7 +124,7 @@ const mapStateToProps = state => {
     imageName: state.singlePostReducer.imageName,
     likeStatus: state.singlePostReducer.likeStatus,
     comment: state.singlePostReducer.comment,
-    flagStatus : state.singlePostReducer.flagStatus,
+    flagStatus: state.singlePostReducer.flagStatus
   };
 };
 
@@ -140,7 +141,7 @@ const mapDispatchToProps = dispatch => {
     },
     changeFlag: () => {
       console.log("particular action called");
-      dispatch({type : "TEST"})
+      dispatch({ type: "TEST" });
     }
   };
 };
