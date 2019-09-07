@@ -1,11 +1,11 @@
-var express = require("express");
-var app = express();
-var userRouter  = require("./routes/userRouter");
+const express = require("express");
+const app = express();
+const userRouter  = require("./routes/userRouter");
 const postRouter = require('./routes/postRouter');
 const categoryRouter = require('./routes/categoryRouter');
-var mongoose = require("mongoose");
-var cors = require("cors");
-var bodyparser = require("body-parser");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const bodyparser = require("body-parser");
 
 app.use(bodyparser.urlencoded({ extended: false }))
 app.use(bodyparser.json());
@@ -27,8 +27,6 @@ mongoose.connect('mongodb://localhost:27017/practice', { useNewUrlParser: true }
 app.use("/",userRouter);
 app.use("/post" , postRouter);
 app.use("/category" , categoryRouter);
-
-
 
 
 

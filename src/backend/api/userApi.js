@@ -1,31 +1,27 @@
-var userDB = require("../schema/userSchema");
-var nodemailer = require("nodemailer");
-var jwt = require("jsonwebtoken");
+const userDB = require("../schema/userSchema");
+const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+const sendMail = require("./nodemailer");
+const boot = require("../nodeResque");
 
 module.exports = {
-  createNewUser: data => {
-    return new Promise((resolve, reject) => {
-      userDB
-        .create(data)
-        .then(resolve(true))
-        .catch(reject(false));
-    });
-  },
 
-  checkUserExist: data => {
-    return new Promise((resolve, reject) => {
-      userDB
-        .find({ email: data.email })
-        .then(result => {
-          if (result.length !== 0) {
-            resolve(true);
-          }
-        })
-        .catch(err => {
-          reject(err);
-          console.log(err);
-        });
-    });
+  createUser: async data => {
+    try {
+      const user = await userDB.find({ email: data.email });
+      console.log(user.length);
+      if (user.length !== 0) {
+        return false;
+      } else {
+        const result = await userDB.create(data);
+        // console.log(result);
+        boot(data);
+        return true;
+      }
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   },
 
   checkLogin: (data, cb) => {
@@ -136,22 +132,16 @@ module.exports = {
         console.log(err);
         return cb(err, null);
       } else {
-        // console.log("decoded token is" , result);
-        // userDB.find({ email: result.user.email }, (err, result) => {
-        //   if (err) {
-        //     console.log(err);
-        //   } else {
-        //     // console.log("data fond is" , result);
-        //     return cb(null, result);
-        //   }
-        // });
-        userDB.find({email : result.user.email}).populate('flag').exec((err , result) => {
-          if(err){
-            console.log(err);
-          }else{
-            return cb(null , result);
-          }
-        })
+        userDB
+          .find({ email: result.user.email })
+          .populate("flag")
+          .exec((err, result) => {
+            if (err) {
+              console.log(err);
+            } else {
+              return cb(null, result);
+            }
+          });
       }
     });
   },

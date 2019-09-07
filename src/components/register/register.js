@@ -1,9 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import Header from "../header";
-import Footer from "../footer";
-import NavBar from "../navbar";
 import Container from "./container";
 
 class SignUpComponent extends React.Component {
@@ -18,6 +15,7 @@ class SignUpComponent extends React.Component {
         password: this.props.password
       })
       .then(res => {
+        console.log(res);
         if (res.data === "thanks for registering") {
           alert(res.data);
           this.props.history.push("/login");
@@ -27,6 +25,7 @@ class SignUpComponent extends React.Component {
   };
 
   render() {
+    document.title = "Register";
     return (
       <div>
         <Container handleSignUp={this.handleSignUp} />

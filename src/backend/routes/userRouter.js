@@ -1,25 +1,35 @@
-var express = require("express");
-var userRouter = express.Router();
-var userApi = require("../api/userApi");
-var Joi = require("@hapi/joi");
+const express = require("express");
+const userRouter = express.Router();
+const userApi = require("../api/userApi");
+const Joi = require("@hapi/joi");
 
-userRouter.post("/signup", (req, res) => {
-  userApi.checkUserExist(req.body).then(result => {
-    if (result === true) {
-      console.log("already registered");
-      res.send("sorry that e-mail already exist try with another");
-    } else {
-      console.log("newly registered");
-      userApi
-        .createNewUser(req.body)
-        .then(result => {
-          if (result === true) {
-            res.send("thanks for registering");
-          }
-        })
-        .catch(err => console.log(err));
+userRouter.post("/signup", async (req, res) => {
+  const check = {
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+    firstname: Joi.string().required(),
+    lastname: Joi.string().required(),
+    username: Joi.string().required()
+  };
+
+  const result = Joi.validate(req.body, check);
+
+  if (!result.error) {
+    try {
+      const result = await userApi.createUser(req.body);
+      console.log("result at use router", result);
+      if (result === true) {
+        res.end( "thanks for registering" );
+      } else {
+        res.end("e mail already exists");
+      }
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
-  });
+  } else {
+    res.send("details are not correct").status(406);
+  }
 });
 
 userRouter.post("/login", (req, res) => {
@@ -72,7 +82,7 @@ userRouter.post("/verifytoken", (req, res) => {
 });
 
 userRouter.post("/updateflag", async (req, res) => {
-    console.log("data at router" , req.body);
+  console.log("data at router", req.body);
   try {
     const result = await userApi.updateFlag(req.body);
     res.send(result);
